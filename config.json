@@ -1,0 +1,12 @@
+{
+  "presencial_unidades": [
+    "Unidade Eusébio",
+    "Unidade Maracanaú",
+    "Unidade Bento Gonçalves",
+    "Unidade Madureira"
+  ],
+  "online_provider_primary": "A",
+  "overflow_provider": "B",
+  "presencial_provider": "B",
+  "duracao_minutos": 50
+}

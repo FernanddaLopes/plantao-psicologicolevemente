@@ -1,27 +1,18 @@
-PASSO A PASSO PARA PUBLICAR SEU SITE NO GITHUB PAGES
 
-1) FAZER UPLOAD DOS ARQUIVOS NO REPOSITÓRIO
--------------------------------------------
-- Acesse o site https://github.com e entre com seu usuário: FernanddaLopes
-- Vá até o repositório chamado: plantao-psicologicolevemente
-- Clique na aba "Add file" > "Upload files"
-- Selecione os arquivos: index.html e README.txt
-- Clique em "Commit changes" para salvar
+# Site Melhorado – Plantão Psicológico
 
-2) ATIVAR O GITHUB PAGES
-------------------------
-- No repositório, clique na aba "Settings"
-- Role a página até encontrar "Pages"
-- Em "Source", selecione "Deploy from a branch"
-- Escolha a branch "main" e clique em "Save"
-- Aguarde alguns segundos até aparecer o link do site
+Este pacote contém:
+- `index.html` – site acessível com wizard de agendamento (série 6×), lembretes simulados e exportações.
+- `config.json` – lista de **unidades presenciais** e parâmetros.
 
-3) LINK FINAL DO SITE
----------------------
-Seu site ficará disponível em:
+## Como publicar (GitHub Pages)
+1. Envie os arquivos deste pacote para seu repositório (`main` na raiz).
+2. Em **Settings → Pages** selecione **Deploy from a branch** > **main** e **/(root)** e **Save**.
+3. Aguarde até 2 minutos e acesse o link exibido.
 
-https://FernanddaLopes.github.io/plantao-psicologicolevemente/
+## Como usar domínio próprio (sem seu nome no link)
+1. No **Settings → Pages → Custom domain**, digite seu domínio (ex.: `plantao.suaempresa.com.br`) e **Save**.
+2. No provedor de DNS, crie um **CNAME** do subdomínio para `FernanddaLopes.github.io`.
+3. Volte ao **Settings → Pages** e marque **Enforce HTTPS**.
 
-Você pode compartilhar esse link com qualquer pessoa. O site estará público e acessível!
-
-DICA: Se quiser mudar o nome do site, basta renomear o repositório e repetir os passos acima.
+Dica: Prefira **subdomínio** (ex.: `plantao.suaempresa.com.br`). Para apex (ex.: `suaempresa.com.br`), use **A records** nos IPs do GitHub Pages e mantenha o CNAME para `www`.

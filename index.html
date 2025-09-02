@@ -1,35 +1,313 @@
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Agendamento Plantão Psicológico</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; }
-    h1 { color: #2c3e50; }
-    .step { margin-bottom: 20px; padding: 15px; background: #fff; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Plantão Psicológico – Agendamentos</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><circle cx='64' cy='64' r='64' fill='%230078d4'/><text x='50%' y='56%' dominant-baseline='middle' text-anchor='middle' font-size='72' fill='white'>🙂</text></svg>">
+<style>
+:root{ --brand:#005fb8; --brand-2:#00a2f0; --ok:#107c10; --warn:#f7630c; --bg:#f6f8fb; --card:#fff; --line:#e5e7eb; --text:#101828; }
+*{ box-sizing:border-box }
+html,body{ margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; background:var(--bg); color:var(--text) }
+header{ background: linear-gradient(90deg,var(--brand),var(--brand-2)); color:#fff; padding:20px 16px }
+header .wrap{ max-width:1100px; margin:0 auto; display:flex; gap:16px; align-items:center; justify-content:space-between }
+.brand{ display:flex; gap:12px; align-items:center }
+.brand .logo{ width:44px; height:44px; border-radius:12px; background:rgba(255,255,255,.2); display:grid; place-items:center; font-size:26px }
+.brand h1{ margin:0; font-size:20px; line-height:1.2 }
+.brand small{ display:block; opacity:.9 }
+.cta{ display:flex; gap:10px; flex-wrap:wrap }
+.cta .btn{ background:#fff; color:#0b3d5c; border:none; padding:10px 14px; border-radius:10px; font-weight:700; cursor:pointer }
+
+.main{ max-width:1100px; margin:16px auto; padding: 0 14px; display:grid; grid-template-columns: 1.2fr 1fr; gap:16px }
+.card{ background:var(--card); border:1px solid var(--line); border-radius:14px; box-shadow:0 2px 6px rgba(16,24,40,.04) }
+.card .hd{ padding:16px; border-bottom:1px solid var(--line); font-weight:800 }
+.card .bd{ padding:16px }
+
+.hero{ grid-column: 1 / -1; display:grid; grid-template-columns:1.4fr 1fr; gap:16px }
+.hero .pitch{ padding:18px; }
+.hero h2{ margin:.2rem 0 .6rem; font-size:28px }
+.hero p{ margin:.2rem 0; color:#475467; font-size:16px }
+.hero .actions{ margin-top:12px; display:flex; gap:10px; flex-wrap:wrap }
+.btn{ display:inline-block; background:var(--brand); color:#fff; border:none; padding:12px 16px; border-radius:12px; font-weight:700; cursor:pointer }
+.btn.sec{ background:#fff; color:#111; border:1px solid var(--line) }
+.btn.warn{ background:var(--warn) }
+.btn.ok{ background:var(--ok) }
+.btn.ghost{ background:transparent; color:var(--brand); border:1px dashed var(--brand) }
+.btn.full{ width:100%; text-align:center }
+
+.grid{ display:grid; gap:12px }
+.cols-2{ grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) }
+.cols-3{ grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) }
+
+label{ font-weight:700; font-size:14px }
+input, select, textarea{ width:100%; padding:11px 12px; border-radius:10px; border:1px solid var(--line); font-size:16px; background:#fff }
+.helper{ color:#475467; font-size:14px }
+.badge{ display:inline-flex; align-items:center; gap:6px; padding:6px 10px; background:#eef6ff; border-radius:999px; color:#004a77; font-weight:700; font-size:12px }
+
+.choices{ display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:12px }
+.choice{ padding:16px; border:2px solid var(--line); border-radius:14px; cursor:pointer; background:#fff; font-weight:800; font-size:18px; text-align:center }
+.choice:hover{ border-color:var(--brand) }
+.choice.selected{ border-color:var(--brand); box-shadow: 0 0 0 3px rgba(0,95,184,.1) }
+
+.step{ display:none }
+.step.active{ display:block }
+
+.slots{ display:grid; grid-template-columns: repeat(auto-fit,minmax(120px,1fr)); gap:8px }
+.slot{ padding:10px; border:1px solid var(--line); border-radius:10px; background:#fff; cursor:pointer; text-align:center }
+.slot.full{ opacity:.35; cursor:not-allowed }
+.slot.selected{ outline:3px solid var(--brand) }
+
+.kpis{ display:grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap:10px }
+.kpi{ padding:12px; border:1px solid var(--line); border-radius:12px; background:#fff }
+.kpi b{ font-size:22px }
+small.muted{ color:#667085 }
+
+footer{ margin:24px 0; text-align:center; color:#667085 }
+
+@media (max-width:900px){ .main, .hero{ grid-template-columns: 1fr } }
+</style>
 </head>
 <body>
-  <h1>Agendamento de Plantão Psicológico</h1>
-  <div class="step">
-    <h2>1. Escolha a modalidade</h2>
-    <p>Você prefere atendimento <strong>Online</strong> ou <strong>Presencial</strong>?</p>
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <div class="logo">🩺</div>
+      <div>
+        <h1>Plantão Psicológico</h1>
+        <small>Agendamento simples • Online e Presencial</small>
+      </div>
+    </div>
+    <div class="cta">
+      <a class="btn sec" href="#sobre">Como funciona</a>
+      <button class="btn" onclick="document.getElementById('wizardCard').scrollIntoView({behavior:'smooth'})">Agendar agora</button>
+    </div>
   </div>
-  <div class="step">
-    <h2>2. Se presencial, escolha sua cidade</h2>
-    <p>Selecione a unidade mais próxima para agendar.</p>
-  </div>
-  <div class="step">
-    <h2>3. Escolha o horário</h2>
-    <p>Veja os horários disponíveis e selecione o melhor para você.</p>
-  </div>
-  <div class="step">
-    <h2>4. Confirmação</h2>
-    <p>Ao confirmar, você agenda <strong>6 sessões</strong no mesmo dia e horário por 6 semanas.</p>
-  </div>
-  <div class="step">
-    <h2>5. Lembretes e Avaliação</h2>
-    <p>Você receberá lembretes antes de cada sessão e poderá avaliar o serviço ao final.</p>
-  </div>
+</header>
+
+<main class="main">
+  <section class="hero card">
+    <div class="pitch">
+      <span class="badge">Série automática • 6 sessões</span>
+      <h2>Marque sua primeira sessão em menos de 2 minutos</h2>
+      <p>Ao escolher o primeiro horário, reservamos automaticamente as próximas <b>5 semanas</b> no mesmo dia e horário. Você receberá lembretes antes de cada encontro.</p>
+      <div class="actions">
+        <button class="btn" onclick="startWizard('online')">Agendar Online</button>
+        <button class="btn ghost" onclick="startWizard('presencial')">Agendar Presencial</button>
+      </div>
+      <p class="helper">Presencial disponível em: <span id="listaUnidades"></span>. Demais localidades: atendimento online.</p>
+    </div>
+    <div class="bd">
+      <div class="kpis" id="kpis"></div>
+    </div>
+  </section>
+
+  <section id="wizardCard" class="card" aria-labelledby="Agendamento">
+    <div class="hd">Agendamento</div>
+    <div class="bd">
+      <div id="step1" class="step active">
+        <p class="helper">Escolha a modalidade. Você confirma as <b>6 sessões</b> em sequência.</p>
+        <div class="choices">
+          <div class="choice" data-mod="online">🧑‍💻 Atendimento <b>Online</b></div>
+          <div class="choice" data-mod="presencial">🏥 Atendimento <b>Presencial</b></div>
+        </div>
+        <div style="margin-top:10px"><button class="btn sec" id="whatsBtn">Quero falar pelo WhatsApp</button></div>
+      </div>
+
+      <div id="step2" class="step">
+        <div class="grid cols-2">
+          <div>
+            <label for="unidade">Unidade (para presencial)</label>
+            <select id="unidade"></select>
+            <small class="helper">Se sua unidade não estiver na lista, escolha <b>Online</b>.</small>
+          </div>
+          <div>
+            <label for="turno">Preferência de turno</label>
+            <select id="turno">
+              <option value="qualquer">Qualquer</option>
+              <option value="manha">Manhã</option>
+              <option value="tarde">Tarde</option>
+              <option value="noite">Noite</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-top:14px">
+          <button class="btn sec" id="back1">Voltar</button>
+          <button class="btn" id="next2">Próximo</button>
+        </div>
+      </div>
+
+      <div id="step3" class="step">
+        <h3>Escolha o dia e horário do <span class="badge">1º atendimento</span></h3>
+        <p class="helper">Reservaremos as <b>5 semanas seguintes</b> no mesmo dia e horário. Se cair em feriado/domingo, ajustamos automaticamente.</p>
+        <div id="slots" class="slots" aria-live="polite"></div>
+        <div style="margin-top:14px">
+          <button class="btn sec" id="back2">Voltar</button>
+          <button class="btn" id="next3" disabled>Próximo</button>
+        </div>
+      </div>
+
+      <div id="step4" class="step">
+        <h3>Revise sua série de 6 sessões</h3>
+        <ul id="serieList"></ul>
+        <details><summary>Regras</summary>
+          <p class="helper">Remarcação até <b>24h</b> antes. <b>2 faltas</b> seguidas pausam a série para reavaliação.</p>
+        </details>
+        <div style="margin-top:14px">
+          <button class="btn sec" id="back3">Voltar</button>
+          <button class="btn" id="next4">Avançar</button>
+        </div>
+      </div>
+
+      <div id="step5" class="step">
+        <h3>Seus dados e consentimento</h3>
+        <div class="grid cols-3">
+          <div><label for="nome">Nome</label><input id="nome" placeholder="Seu nome" /></div>
+          <div><label for="telefone">WhatsApp</label><input id="telefone" placeholder="DDD + número" /></div>
+          <div><label for="email">E-mail</label><input id="email" placeholder="voce@exemplo.com" /></div>
+        </div>
+        <label style="display:flex; gap:8px; margin-top:10px"><input id="consent" type="checkbox" style="width:auto"> Concordo com o uso dos meus dados para <b>agendamento, lembretes e pesquisa</b>.</label>
+        <div style="margin-top:14px">
+          <button class="btn sec" id="back4">Voltar</button>
+          <button class="btn ok" id="confirmar" disabled>Confirmar agendamento</button>
+        </div>
+      </div>
+
+      <div id="step6" class="step">
+        <h3>Pronto! Série confirmada ✅</h3>
+        <p>Você receberá lembretes <b>D‑1</b> (e opcionais 2h antes). Utilize:</p>
+        <div class="grid cols-3">
+          <button class="btn" id="baixarICS">Baixar calendário (.ics)</button>
+          <button class="btn sec" id="exportarCSV">Exportar sessões (CSV)</button>
+          <button class="btn sec" id="simularLembrete">Simular lembrete D‑1</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sobre" class="card">
+    <div class="hd">Como funciona</div>
+    <div class="bd">
+      <ol>
+        <li>Escolha <b>Online</b> ou <b>Presencial</b> (presencial nas unidades listadas).</li>
+        <li>Selecione o 1º horário; a plataforma reserva automaticamente +5 semanas.</li>
+        <li>Receba lembretes e, ao final da 6ª, responda ao <b>NPS</b>.</li>
+      </ol>
+      <small class="helper">Nenhum dado clínico é coletado. Apenas dados de agenda.</small>
+    </div>
+  </section>
+</main>
+
+<footer>© Plantão Psicológico – Piloto</footer>
+
+<script>
+const Config = { unidades: [], duracao: 50 };
+fetch('config.json').then(r=>r.json()).then(cfg=>{
+  Config.unidades = cfg.presencial_unidades; Config.duracao = cfg.duracao_minutos || 50;
+  document.getElementById('listaUnidades').textContent = Config.unidades.join(', ');
+  const sel = document.getElementById('unidade');
+  sel.innerHTML = '<option value="">Selecione</option>' + Config.unidades.map(u=>`<option>${u}</option>`).join('');
+});
+
+const state = { mod:null, unidade:null, turno:'qualquer', slot:null, serie:[], pessoa:{ nome:'', telefone:'', email:'', consent:false } };
+const dbKey = 'pp_sessoes_v2';
+const getAll = ()=> JSON.parse(localStorage.getItem(dbKey)||'[]');
+const setAll = arr => localStorage.setItem(dbKey, JSON.stringify(arr));
+
+function startWizard(mod){
+  state.mod = mod; show(1);
+  document.querySelectorAll('.choice').forEach(c=>c.classList.remove('selected'));
+  document.querySelector(`.choice[data-mod="${mod}"]`).classList.add('selected');
+  if(mod==='presencial') show(2); else show(3);
+}
+
+document.querySelectorAll('.choice').forEach(ch=> ch.addEventListener('click', ()=> startWizard(ch.dataset.mod)) );
+document.getElementById('whatsBtn').onclick = ()=> window.open('https://wa.me/5599999999999?text='+encodeURIComponent('Olá! Quero agendar o Plantão Psicológico.'),'_blank');
+
+document.getElementById('back1').onclick = ()=> show(1);
+document.getElementById('next2').onclick = ()=>{ state.unidade = document.getElementById('unidade').value || null; show(3); };
+
+document.getElementById('back2').onclick = ()=> state.mod==='presencial'?show(2):show(1);
+const btnNext3 = document.getElementById('next3');
+
+function renderSlots(){
+  const div = document.getElementById('slots'); div.innerHTML='';
+  const now = new Date();
+  const slotTimes = ['08:00','10:00','14:00','16:00','19:00'];
+  for(let i=0;i<14;i++){
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate()+i);
+    const iso = d.toISOString().slice(0,10);
+    for(const t of slotTimes){
+      // Simple capacity: online A primary, B overflow; presencial always B
+      let provider = state.mod==='online' ? (Math.random()<.7?'A':'B') : 'B';
+      const full = Math.random()<.1; // 10% full to exemplify
+      const b = document.createElement('button');
+      b.className = 'slot'+(full?' full':''); b.textContent = `${d.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'})} • ${t}h • Prov. ${provider}`;
+      b.onclick = ()=>{ if(full) return; document.querySelectorAll('.slot').forEach(s=>s.classList.remove('selected')); b.classList.add('selected'); state.slot = {dateISO: iso, time:t, provider}; btnNext3.disabled=false; };
+      div.appendChild(b);
+    }
+  }
+}
+renderSlots();
+
+btnNext3.onclick = ()=>{ buildSerie(); renderSerie(); show(4); };
+
+document.getElementById('back3').onclick = ()=> show(3);
+document.getElementById('next4').onclick = ()=> show(5);
+
+['nome','telefone','email'].forEach(id=> document.getElementById(id).addEventListener('input', canConfirm) );
+document.getElementById('consent').addEventListener('change', canConfirm);
+function canConfirm(){ state.pessoa.nome = nome.value.trim(); state.pessoa.telefone = telefone.value.trim(); state.pessoa.email = email.value.trim(); state.pessoa.consent = consent.checked; document.getElementById('confirmar').disabled = !(state.pessoa.nome && state.pessoa.telefone && state.pessoa.consent); }
+
+document.getElementById('confirmar').onclick = ()=>{
+  const all = getAll(); const nomeP = state.pessoa.nome; state.serie.forEach(s=> all.push({...s, nome:nomeP})); setAll(all);
+  updateKPIs(); show(6);
+};
+
+document.getElementById('baixarICS').onclick = ()=>{
+  const ics = buildICS(state.pessoa.nome, state.serie, Config.duracao);
+  const blob = new Blob([ics], {type:'text/calendar'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='agendamentos_serie6.ics'; a.click();
+};
+
+document.getElementById('exportarCSV').onclick = ()=>{
+  const rows = [['Nome','Data','Hora','Fornecedor','Modo','Unidade','Status']];
+  state.serie.forEach(s=> rows.push([state.pessoa.nome, s.dateISO, s.time, s.provider, s.modo, s.unidade||'', 'Agendado']));
+  const csv = rows.map(r=>r.map(x=>`"${String(x).replace('"','\"')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'}); const a=document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='agendamentos_serie6.csv'; a.click();
+};
+
+document.getElementById('simularLembrete').onclick = ()=> alert('Lembrete (D‑1): sua sessão é amanhã às '+state.slot.time+'h. 1) Confirmar  2) Remarcar  3) Cancelar');
+
+function buildSerie(){
+  const serie = []; const first = new Date(state.slot.dateISO+'T00:00:00');
+  for(let k=0;k<6;k++){
+    const d = new Date(first); d.setDate(d.getDate()+7*k); if(d.getDay()===0){ d.setDate(d.getDate()+1); } // domingo -> segunda
+    const iso = d.toISOString().slice(0,10);
+    const unidade = state.mod==='presencial' ? (state.unidade||'Unidade Presencial') : '';
+    // Recalcular provider simples para online (A preferencial, overflow B)
+    const provider = state.mod==='online' ? (Math.random()<.7?'A':'B') : 'B';
+    serie.push({ dateISO: iso, time: state.slot.time, provider, modo: state.mod, unidade });
+  }
+  state.serie = serie;
+}
+
+function renderSerie(){ const ul = document.getElementById('serieList'); ul.innerHTML=''; state.serie.forEach((s,i)=>{ const li=document.createElement('li'); const d = new Date(s.dateISO+'T00:00:00'); li.innerHTML = `<b>${i+1}/6</b> – ${d.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'2-digit'})} às <b>${s.time}h</b> • Prov. <b>${s.provider}</b> ${s.unidade?('• '+s.unidade):''}`; ul.appendChild(li); }); }
+
+function show(n){ document.querySelectorAll('#wizardCard .step').forEach((el,i)=> el.classList.toggle('active', i===n-1)); }
+
+function updateKPIs(){
+  const k = document.getElementById('kpis'); const all = getAll(); const total=all.length; const pres=all.filter(s=>s.presenca==='Presente').length; const falt=all.filter(s=>s.presenca==='Falta').length; const pend = total-pres-falt; const comp = total? Math.round(pres/total*100):0; const noShow= total? Math.round(falt/total*100):0;
+  k.innerHTML = `<div class='kpi'><div>Total de sessões</div><b>${total}</b></div><div class='kpi'><div>Comparecimento</div><b>${comp}%</b><small class='muted'>${pres} de ${total}</small></div><div class='kpi'><div>No‑show</div><b>${noShow}%</b><small class='muted'>${falt} de ${total}</small></div><div class='kpi'><div>Agendadas futuras</div><b>${pend}</b></div>`
+}
+updateKPIs();
+
+function buildICS(nome, serie, dur){
+  const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Plantao//Agendamento//PT-BR'];
+  for(const s of serie){ const dt = new Date(s.dateISO+'T'+s.time+':00'); const dtS = toICS(dt); const dtE= toICS(new Date(dt.getTime()+dur*60000)); const uid=`${s.dateISO}-${s.time}-${s.provider}-${Math.random().toString(36).slice(2)}@plantao`; lines.push('BEGIN:VEVENT','UID:'+uid,'DTSTAMP:'+toICS(new Date()),'DTSTART:'+dtS,'DTEND:'+dtE,'SUMMARY:Plantão Psicológico ('+s.modo+')','DESCRIPTION:'+esc('Sessão '+s.modo+' • Fornecedor '+s.provider+' • Participante: '+nome),'LOCATION:'+(s.modo==='presencial'?esc(s.unidade):'Online'),'END:VEVENT'); }
+  lines.push('END:VCALENDAR'); return lines.join('\r\n');
+}
+function toICS(d){ const pad=n=>n<10?'0'+n:n; return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+'T'+pad(d.getUTCHours())+pad(d.getUTCMinutes())+'00Z'; }
+function esc(s){ return String(s).replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;'); }
+</script>
 </body>
 </html>
