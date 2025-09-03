@@ -5,7 +5,7 @@
       "primaria_hex": "#00205B",
       "destaque_hex": "#AC8400"
     },
-    "fonte_primaria": "Bookerly, Georgia, 'Times New Roman', serif"
+    "fonte": "Calibri, Segoe UI, system-ui, Arial, Helvetica, sans-serif"
   },
   "unidades_presenciais": [
     {
@@ -29,5 +29,6 @@
   "policy": {
     "remarcacao_horas": 24,
     "faltas_consecutivas_pausa": 2
-  }
+  },
+  "whatsapp": "+5585991694292"
 }
