@@ -1,12 +1,33 @@
 {
-  "presencial_unidades": [
-    "Unidade Eusébio",
-    "Unidade Maracanaú",
-    "Unidade Bento Gonçalves",
-    "Unidade Madureira"
+  "marca": {
+    "nome": "Levemente",
+    "cores": {
+      "primaria_hex": "#00205B",
+      "destaque_hex": "#AC8400"
+    },
+    "fonte_primaria": "Bookerly, Georgia, 'Times New Roman', serif"
+  },
+  "unidades_presenciais": [
+    {
+      "nome": "Unidade Eusébio",
+      "local": "Sala 3 – Bloco A"
+    },
+    {
+      "nome": "Unidade Maracanaú",
+      "local": "Sala 2 – 1º andar"
+    },
+    {
+      "nome": "Unidade Bento Gonçalves",
+      "local": "Sala 5 – Bloco B"
+    },
+    {
+      "nome": "Unidade Madureira",
+      "local": "Sala 1 – Térreo"
+    }
   ],
-  "online_provider_primary": "A",
-  "overflow_provider": "B",
-  "presencial_provider": "B",
-  "duracao_minutos": 50
+  "duracao_minutos": 50,
+  "policy": {
+    "remarcacao_horas": 24,
+    "faltas_consecutivas_pausa": 2
+  }
 }
